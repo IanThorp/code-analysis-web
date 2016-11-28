@@ -24,6 +24,10 @@ function getPersonList() {
             }
 
             response.json().then((imageList) => {
+                // Add last name property to make future functions easier
+                imageList.forEach((person) => {
+                    person.lastName = getLastName(person.name);
+                })
                 resolve(imageList);
             });
         });
@@ -37,10 +41,11 @@ function getPersonList() {
 
  ***************************************************/
 
+// change to es6 style function to keep style similiar throughout js file. 
 
-function getLastName(fullName) {
+const getLastName = (fullName) => {
     return fullName.match(/\w+/g)[1];
-}
+};
 
 const getFirstName = (fullName) => {
     return fullName.match(/\w+/g)[0];
@@ -51,13 +56,14 @@ const getFirstName = (fullName) => {
  */
 function shuffleList(list) {
     // Make a copy & don't mutate the passed in list
-    let result = list.slice(1);
+    // slice starts at second entry, changed to start at first
+    let result = list.slice(0);
 
-    let tmp, j, i = list.length - 1
+    // declare variables in loop since that is the only time they are used.
 
-    for (; i > 0; i -= 1) {
-        j = Math.floor(Math.random() * (i + 1));
-        tmp = list[i];
+    for (let i = list.length - 1; i > 0; i -= 1) {
+        let j = Math.floor(Math.random() * (i + 1));
+        let tmp = list[i];
         list[i] = list[j];
         list[j] = tmp;
     }
@@ -70,9 +76,13 @@ function shuffleList(list) {
  * Remove any people that do not have the name we are
  * searching for.
  */
+ // make search term and name case insensitive.
 function filterByName(searchForName, personList) {
+    searchForName = searchForName.toLowerCase();
     return personList.filter((person) => {
-        return person.name === searchForName;
+        console.log(person)
+        // Only needs to check if letters typed so far are included in name, not equal to name. 
+        return person.name.toLowerCase().includes(searchForName);
     });
 }
 
@@ -96,18 +106,18 @@ function filterByName(searchForName, personList) {
 function sortObjListByProp(prop) {
     return function(objList) {
         // Make a copy & don't mutate the passed in list
-        let result = objList.slice(1);
+        // objList is slicing off first element. Fixed so it keeps everything.
+        let result = objList.slice(0);
 
         result.sort((a, b) => {
+            // change to else if, as both will never be true simultaneously.
             if (a[prop] < b[prop]) {
                 return -1;
-            }
-
-            if (a[prop] > b[prop]) {
+            } else if (a[prop] > b[prop]) {
                 return 1;
             }
-
-            return 1;
+            // should return 0 if equal
+             return 0;
         });
 
         return result;
@@ -116,8 +126,8 @@ function sortObjListByProp(prop) {
 
 const sortByFirstName = sortObjListByProp('name');
 
-const sortByLastName = (personList) => sortByFirstName(personList).reverse();
-
+// SortByLastName does not work as intended. It actually just reverses a sort by first name
+const sortByLastName = sortObjListByProp('lastName');
 
 /*==================================================
 
