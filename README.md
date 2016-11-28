@@ -2,6 +2,16 @@
 
 See comments in `index.html` for instructions.
 
+I ended up really only modifying the css.
+
+The biggest fixes were the broken "sortByLastName" and filter.
+
+Filter was only returning names that 100% matched the input string. This should just be names the include the input string.
+
+sortByLastName simply returned sortByFirstName in reverse. The easiest way to do this was to add a lastName property to the object upon getting from the api. 
+
+View notes in JS file for more details. 
+
 ## Run
 
 Open `index.html` in Google Chrome.
@@ -29,3 +39,4 @@ Open `index.html` in Google Chrome.
 ### React Styles
 
 - Always favor stateless components
+
